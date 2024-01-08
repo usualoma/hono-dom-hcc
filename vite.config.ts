@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import devServer from "@hono/vite-dev-server";
 import fs from "fs";
+import { HONO_COMPONENT, HONO_COMPONENT_ID } from "hono/jsx";
 
 function generateHonoClientComponents() {
   const virtualModuleId = "virtual:hono-client-components";
@@ -35,7 +36,7 @@ function generateHonoClientComponents() {
 
         clients.push(id);
 
-        // assign honoFunctionId automatically
+        // assign HONO_COMPONENT_ID automatically
         return `
         export * from '${id}-hono-client.tsx'
         import * as Module from '${id}-hono-client.tsx'
@@ -43,7 +44,7 @@ function generateHonoClientComponents() {
           if (!typeof Module[key] === 'function') {
             return;
           }
-          Module[key].honoFunctionId ||= \`${id}-\${key}\`.replace(/[^a-zA-Z0-9]/g, "_");
+          Module[key]['${HONO_COMPONENT_ID}'] ||= \`${id}-\${key}\`.replace(/[^a-zA-Z0-9]/g, "_");
         });
         `;
       }
@@ -63,18 +64,18 @@ function generateHonoClientComponents() {
           const id = c.replace(/[^a-zA-Z0-9]/g, "_");
           return `
         Object.keys(${id}).forEach((key) => {
-          if (!${id}[key].honoFunctionId) {
+          if (!${id}[key]['${HONO_COMPONENT_ID}']) {
             return;
           }
-          components[${id}[key].honoFunctionId] = ${id}[key];
+          components[${id}[key]['${HONO_COMPONENT_ID}']] = ${id}[key];
         });`;
         })
         .join("\n")}
       
       document
-        .querySelectorAll("[data-hono-function]")
+        .querySelectorAll("${HONO_COMPONENT}")
         .forEach((el) => {
-          const data = JSON.parse(el.dataset.honoFunction);;
+          const data = JSON.parse(el.dataset.hono);
           el.innerHTML = "";
           render(jsx(components[data.id], data.props), el);
         });
