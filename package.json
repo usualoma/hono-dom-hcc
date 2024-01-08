@@ -1,0 +1,21 @@
+{
+  "name": "hono-dom-hcc",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "hono": "file:../../honojs/hono"
+  },
+  "devDependencies": {
+    "@hono/vite-dev-server": "^0.3.4",
+    "glob": "^10.3.10",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8"
+  }
+}
