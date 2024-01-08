@@ -1,16 +1,21 @@
-import { Hono } from 'hono'
-import { jsxRenderer } from 'hono/jsx-renderer'
-import { Counter } from './counter'
+import { Hono } from "hono";
+import { jsxRenderer } from "hono/jsx-renderer";
+import { Style } from "hono/css";
+import { Counter } from "./counter";
 
-const app = new Hono()
+const app = new Hono();
 
 app.get(
-  '*',
+  "*",
   jsxRenderer(({ children }) => {
     return (
       <html>
         <head>
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
+          <Style />
           {import.meta.env.PROD ? (
             <script type="module" src="/static/client.js"></script>
           ) : (
@@ -22,12 +27,12 @@ app.get(
           <div id="app">{children}</div>
         </body>
       </html>
-    )
+    );
   })
-)
+);
 
-app.get('/', (c) => {
-  return c.render(<Counter />)
-})
+app.get("/", (c) => {
+  return c.render(<Counter />);
+});
 
-export default app
+export default app;
